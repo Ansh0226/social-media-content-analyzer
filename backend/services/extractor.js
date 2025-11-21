@@ -1,15 +1,16 @@
-// backend/services/extractor.js
+
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
-const FormData = require("form-data"); // npm i form-data
+const FormData = require("form-data");
 const Tesseract = require("tesseract.js");
 
 let pdfLib = null;
 try {
   pdfLib = require("pdf-parse");
 } catch (e) {
-  // leave null, will throw in extractFromPDF with helpful message
+  // if pdf-parse missing, we'll give a helpful error later
+  pdfLib = null;
 }
 
 const OCR_SPACE_URL = "https://api.ocr.space/parse/image";
@@ -75,27 +76,23 @@ async function extractFromImage(filepath, opts = {}) {
   const preferLocal = opts.preferLocal !== undefined ? opts.preferLocal : true;
   const apiKey = opts.ocrKey || null;
 
-  // try local tesseract worker if preferred
+  // 1) Try local Tesseract.recognize() (single-shot)
   if (preferLocal) {
     try {
-      const worker = Tesseract.createWorker();
-      await worker.load();
-      await worker.loadLanguage("eng");
-      await worker.initialize("eng");
-      const {
-        data: { text },
-      } = await worker.recognize(filepath);
-      await worker.terminate();
+      // recognize accepts a path or buffer and language string
+      // We call it directly to avoid worker lifecycle incompatibilities
+      const res = await Tesseract.recognize(filepath, "eng", {});
+      const text = res && res.data && res.data.text ? res.data.text : "";
       if (text && text.trim()) return text.trim();
     } catch (e) {
       console.warn(
-        "Local Tesseract attempt failed, will try fallback if available:",
+        "Local Tesseract.recognize() failed, will try fallback if available:",
         e.message || e
       );
     }
   }
 
-  // fallback to OCR.Space if API key provided
+  // 2) Fallback: OCR.Space remote API if key provided
   if (apiKey) {
     try {
       const text = await ocrSpaceFile(apiKey, filepath);
@@ -105,16 +102,10 @@ async function extractFromImage(filepath, opts = {}) {
     }
   }
 
-  // final best-effort local attempt (non-worker pattern)
+  // 3) Final attempt: local recognize again (best-effort)
   try {
-    const worker = Tesseract.createWorker();
-    await worker.load();
-    await worker.loadLanguage("eng");
-    await worker.initialize("eng");
-    const {
-      data: { text },
-    } = await worker.recognize(filepath);
-    await worker.terminate();
+    const res = await Tesseract.recognize(filepath, "eng", {});
+    const text = res && res.data && res.data.text ? res.data.text : "";
     return (text || "").trim();
   } catch (e) {
     throw new Error("OCR failed: " + (e.message || e));
