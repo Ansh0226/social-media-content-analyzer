@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import ParticleBackground from "./components/ParticleBackground";
+import Upload from "./components/Upload";
+import Results from "./components/Results";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [result, setResult] = useState(null);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="min-h-screen relative bg-gradient-to-b from-slate-900 to-slate-800 text-white overflow-hidden">
+      <ParticleBackground />
 
-export default App
+      <Header />
+
+      <main className="container mx-auto px-4 py-8 relative z-10">
+        <h1 className="text-3xl font-bold mb-4">
+          Social Media Content Analyzer
+        </h1>
+        <p className="text-slate-300 mb-6">
+          Upload any PDF or Image and instantly get engagement suggestions.
+        </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Upload Section */}
+          <div>
+            <Upload onResult={setResult} />
+          </div>
+
+          {/* Results Section */}
+          <div className="lg:col-span-2">
+            <Results data={result} />
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
