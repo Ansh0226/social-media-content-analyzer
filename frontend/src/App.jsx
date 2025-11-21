@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ParticleBackground from "./components/ParticleBackground";
 import Upload from "./components/Upload";
-import Results from "./components/Results";
+// import Results from "./components/Results";
 
 export default function App() {
   const [result, setResult] = useState(null);
@@ -30,7 +30,7 @@ export default function App() {
 
           {/* Results Section */}
           <div className="lg:col-span-2">
-            <Results data={result} />
+            {/* <Results data={result} /> */}
           </div>
         </div>
       </main>
