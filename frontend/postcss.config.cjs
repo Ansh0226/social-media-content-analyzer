@@ -1,7 +1,7 @@
+// postcss.config.js
 module.exports = {
-  plugins: [
-    // new PostCSS adapter for Tailwind
-    require("@tailwindcss/postcss")(),
-    require("autoprefixer")(),
-  ],
+  plugins: {
+    "@tailwindcss/postcss": {}, // ✅ correct Tailwind v4 PostCSS plugin
+    autoprefixer: {}, // optional but fine to keep
+  },
 };

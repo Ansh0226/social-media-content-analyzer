@@ -11,26 +11,29 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-export default function KeywordChart({ keywords }) {
-  const labels = keywords.slice(0, 10).map((k) => k[0]);
-  const data = keywords.slice(0, 10).map((k) => k[1]);
+export default function KeywordChart({ keywords = [] }) {
+  if (!keywords.length) return null;
+
+  const labels = keywords.map(([word]) => word);
+  const values = keywords.map(([, count]) => count);
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Frequency",
+        data: values,
+        backgroundColor: "rgba(99,102,241,0.8)",
+      },
+    ],
+  };
 
   return (
-    <Bar
-      data={{
-        labels,
-        datasets: [
-          {
-            label: "Frequency",
-            data,
-            backgroundColor: "rgba(99,102,241,0.7)",
-          },
-        ],
-      }}
-      options={{
-        responsive: true,
-        plugins: { legend: { display: false } },
-      }}
-    />
+    <div className="bg-white rounded-lg p-5 shadow-md">
+      <h3 className="font-semibold mb-3 text-slate-800">
+        Top Keyword Frequency
+      </h3>
+      <Bar data={data} options={{ plugins: { legend: { display: false } } }} />
+    </div>
   );
 }
