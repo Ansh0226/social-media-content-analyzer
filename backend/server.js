@@ -7,7 +7,12 @@ const path = require("path");
 const extractRouter = require("./routes/extract");
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // or your frontend URL later
+    methods: ["GET", "POST"],
+  })
+);
 app.use(express.json());
 
 app.use("/api/extract", extractRouter);
