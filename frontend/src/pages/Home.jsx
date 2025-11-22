@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -19,10 +20,11 @@ export default function Home() {
               social media impact with our advanced AI-powered analyzer.
             </p>
             <div className="hero-actions">
-              <a href="/analyze" className="btn primary-btn">
+              <NavLink to="/analyze" className="btn primary-btn">
                 <i className="fas fa-rocket me-2" />
                 Start Analyzing Free
-              </a>
+              </NavLink>
+
               <a href="#features" className="btn secondary-ghost">
                 <i className="fas fa-play-circle me-2" />
                 Learn More
@@ -171,10 +173,10 @@ export default function Home() {
             Join thousands of content creators who boost their engagement with
             our AI analyzer.
           </p>
-          <a href="/analyze" className="btn primary-btn">
-            <i className="fas fa-magic me-2" />
+          <NavLink to="/analyze" className="btn primary-btn">
+            <i className="fas fa-rocket me-2" />
             Start Analyzing Free
-          </a>
+          </NavLink>
         </div>
       </section>
     </main>
